@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>탕전 물양 계산기</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Pretendard:wght@400;500;600&display=swap');
+
+  :root{
+    --paper: #EAE3D3;
+    --ink: #2B3226;
+    --ink-soft: #5B6152;
+    --stamp: #A63D2F;
+    --gold: #A6822F;
+    --line: rgba(43,50,38,0.18);
+    --card: #F4EFE3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    padding: 20px 16px;
+  }
+
+  .wrap { max-width: 420px; margin: 0 auto; }
+
+  h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0 0 16px;
+    text-align: center;
+  }
+
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .toggle-group { display: flex; gap: 6px; }
+
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    border-radius: 3px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .toggle-btn.active {
+    border-color: var(--stamp);
+    background: rgba(166,61,47,0.09);
+    color: var(--stamp);
+    font-weight: 600;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 3px;
+    background: var(--paper);
+    font-size: 15px;
+    font-family: 'Pretendard', sans-serif;
+    color: var(--ink);
+  }
+
+  input[type="number"]:focus { outline: none; border-color: var(--gold); }
+
+  .hint {
+    font-size: 11px;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    margin-top: 5px;
+  }
+
+  .season-field.disabled { opacity: 0.35; pointer-events: none; }
+
+  .result {
+    text-align: center;
+    padding: 18px 16px 16px;
+    background: var(--ink);
+    border-radius: 3px;
+    color: var(--paper);
+  }
+
+  .result .label { font-size: 12px; color: rgba(234,227,211,0.7); margin-bottom: 6px; }
+
+  .result .value {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .result .value .unit { font-size: 16px; font-weight: 400; margin-left: 3px; color: rgba(234,227,211,0.75); }
+
+  .breakdown {
+    border-top: 1px solid rgba(234,227,211,0.2);
+    margin-top: 12px;
+    padding-top: 10px;
+    font-size: 12px;
+    color: rgba(234,227,211,0.8);
+    line-height: 1.8;
+    text-align: left;
+  }
+  .breakdown .row { display: flex; justify-content: space-between; }
+  .breakdown .row .k { color: rgba(234,227,211,0.55); }
+
+  .calc-btn {
+    width: 100%;
+    margin-top: 4px;
+    padding: 11px;
+    border: none;
+    border-radius: 3px;
+    background: var(--stamp);
+    color: var(--paper);
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .calc-btn:active { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>탕전 물양 계산기</h1>
+
+  <section>
+    <div class="field">
+      <div class="toggle-group" id="herbType">
+        <button class="toggle-btn active" data-value="일반">일반약</button>
+        <button class="toggle-btn" data-value="녹용">녹용약</button>
+      </div>
+    </div>
+
+    <div class="row-2 field">
+      <div>
+        <label>약재무게(g)</label>
+        <input type="number" id="totalWeight" value="1600" min="0">
+      </div>
+      <div>
+        <label>제외무게(g)</label>
+        <input type="number" id="excludeWeight" value="0" min="0">
+      </div>
+    </div>
+    <p class="hint">제외: 석고·분말류(모려·용골·사인 등)</p>
+
+    <div class="field season-field" id="seasonField">
+      <label>계절</label>
+      <div class="toggle-group" id="season">
+        <button class="toggle-btn active" data-value="여름">여름</button>
+        <button class="toggle-btn" data-value="겨울">겨울</button>
+      </div>
+    </div>
+
+    <div class="row-2 field">
+      <div>
+        <label>1포당 용량(cc)</label>
+        <input type="number" id="perPacket" value="120" min="0">
+      </div>
+      <div>
+        <label>총 갯수(포)</label>
+        <input type="number" id="packetCount" value="30" min="0">
+      </div>
+    </div>
+
+    <button class="calc-btn" id="calcBtn">계산 시작</button>
+  </section>
+
+  <div class="result">
+    <div class="label">최종 투입 물양</div>
+    <div class="value"><span id="resultValue">-</span><span class="unit" id="resultUnit"></span></div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+</div>
+
+<script>
+  const state = { herbType: '일반', season: '여름' };
+
+  function setupToggle(groupId, stateKey) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state[stateKey] = btn.dataset.value;
+      });
+    });
+  }
+  setupToggle('herbType', 'herbType');
+  setupToggle('season', 'season');
+
+  document.getElementById('calcBtn').addEventListener('click', calculate);
+
+  function calculate() {
+    const totalWeight = parseFloat(document.getElementById('totalWeight').value) || 0;
+    const excludeWeight = parseFloat(document.getElementById('excludeWeight').value) || 0;
+    const perPacket = parseFloat(document.getElementById('perPacket').value) || 0;
+    const packetCount = parseFloat(document.getElementById('packetCount').value) || 0;
+
+    const effWeight = Math.max(totalWeight - excludeWeight, 0);
+    const isNok = state.herbType === '녹용';
+    const isSmall = effWeight > 0 && effWeight <= 500;
+
+    document.getElementById('seasonField').classList.toggle('disabled', isSmall);
+
+    let mult, multLabel;
+    if (isSmall) {
+      mult = isNok ? 0.8 : 0.5;
+      multLabel = '500g 이하';
+    } else {
+      mult = state.season === '여름' ? (isNok ? 1.1 : 0.8) : (isNok ? 1.3 : 1.0);
+      multLabel = state.season;
+    }
+    const absorption = effWeight * mult;
+
+    let evap;
+    if (effWeight > 1000) evap = isNok ? 3000 : 2500;
+    else evap = isNok ? 2500 : 2000;
+
+    const packaging = perPacket * packetCount;
+    const total = packaging + absorption + evap;
+
+    document.getElementById('resultValue').textContent = Math.round(total).toLocaleString();
+    document.getElementById('resultUnit').textContent = 'cc';
+
+    const lines = [
+      ['유효무게', `${effWeight}g`],
+      ['포장필요량', `${Math.round(packaging).toLocaleString()}cc`],
+      ['약재흡수량', `${Math.round(absorption).toLocaleString()}cc (${multLabel})`],
+      ['증발량', `${Math.round(evap).toLocaleString()}cc`],
+    ];
+    document.getElementById('breakdown').innerHTML =
+      lines.map(([k, v]) => `<div class="row"><span class="k">${k}</span><span>${v}</span></div>`).join('');
+  }
+</script>
+
+</body>
+</html>
