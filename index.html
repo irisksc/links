@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>탕전 물양 계산기</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Pretendard:wght@400;500;600&display=swap');
 
   :root{
     --paper: #EAE3D3;
@@ -22,102 +22,52 @@
   body {
     margin: 0;
     background: var(--paper);
-    background-image:
-      radial-gradient(circle at 15% 10%, rgba(166,61,47,0.05), transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(166,130,47,0.06), transparent 45%);
     color: var(--ink);
     font-family: 'Pretendard', -apple-system, sans-serif;
-    min-height: 100vh;
-    padding: 40px 20px 80px;
+    padding: 20px 16px;
   }
 
-  .wrap { max-width: 640px; margin: 0 auto; }
-
-  header {
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 18px;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .wrap { max-width: 420px; margin: 0 auto; }
 
   h1 {
     font-family: 'Noto Serif KR', serif;
     font-weight: 700;
-    font-size: 28px;
-    margin: 0;
-    letter-spacing: -0.01em;
+    font-size: 19px;
+    margin: 0 0 16px;
+    text-align: center;
   }
-
-  .stamp {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 13px;
-    color: var(--stamp);
-    border: 1.5px solid var(--stamp);
-    border-radius: 4px;
-    padding: 3px 9px;
-    white-space: nowrap;
-  }
-
-  .formula {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 14px;
-    line-height: 2;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--stamp);
-    border-radius: 3px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    color: var(--ink-soft);
-  }
-  .formula .main { color: var(--ink); font-weight: 700; }
 
   section {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 3px;
-    padding: 24px 24px 26px;
-    margin-bottom: 20px;
+    padding: 16px;
+    margin-bottom: 12px;
   }
 
-  .section-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin: 0 0 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px dashed var(--line);
-  }
-
-  .field { margin-bottom: 18px; }
+  .field { margin-bottom: 12px; }
   .field:last-child { margin-bottom: 0; }
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
   .field label {
     display: block;
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: var(--ink-soft);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
-  .toggle-group { display: flex; gap: 8px; }
+  .toggle-group { display: flex; gap: 6px; }
 
   .toggle-btn {
     flex: 1;
-    padding: 10px 12px;
+    padding: 8px 10px;
     border: 1.5px solid var(--line);
     background: transparent;
     border-radius: 3px;
     font-family: 'Pretendard', sans-serif;
-    font-size: 14.5px;
+    font-size: 13.5px;
     color: var(--ink-soft);
     cursor: pointer;
-    transition: border-color 0.15s, background 0.15s, color 0.15s;
   }
 
   .toggle-btn.active {
@@ -129,11 +79,11 @@
 
   input[type="number"] {
     width: 100%;
-    padding: 11px 14px;
+    padding: 8px 10px;
     border: 1.5px solid var(--line);
     border-radius: 3px;
     background: var(--paper);
-    font-size: 16px;
+    font-size: 15px;
     font-family: 'Pretendard', sans-serif;
     color: var(--ink);
   }
@@ -141,151 +91,85 @@
   input[type="number"]:focus { outline: none; border-color: var(--gold); }
 
   .hint {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--ink-soft);
     opacity: 0.75;
-    margin-top: 6px;
+    margin-top: 5px;
   }
 
-  .season-field { transition: opacity 0.2s, max-height 0.2s; overflow: hidden; }
   .season-field.disabled { opacity: 0.35; pointer-events: none; }
-
-  .season-note {
-    font-size: 12px;
-    color: var(--stamp);
-    margin-top: 8px;
-    display: none;
-  }
-  .season-note.show { display: block; }
 
   .result {
     text-align: center;
-    padding: 30px 20px 26px;
+    padding: 18px 16px 16px;
     background: var(--ink);
     border-radius: 3px;
     color: var(--paper);
-    margin-bottom: 20px;
   }
 
-  .result .label {
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: rgba(234,227,211,0.7);
-    margin-bottom: 10px;
-  }
+  .result .label { font-size: 12px; color: rgba(234,227,211,0.7); margin-bottom: 6px; }
 
   .result .value {
     font-family: 'Noto Serif KR', serif;
-    font-size: 44px;
+    font-size: 32px;
     font-weight: 700;
-    color: var(--paper);
   }
-
-  .result .value .unit {
-    font-size: 20px;
-    font-weight: 400;
-    margin-left: 4px;
-    color: rgba(234,227,211,0.75);
-  }
+  .result .value .unit { font-size: 16px; font-weight: 400; margin-left: 3px; color: rgba(234,227,211,0.75); }
 
   .breakdown {
     border-top: 1px solid rgba(234,227,211,0.2);
-    margin-top: 18px;
-    padding-top: 16px;
-    font-size: 13.5px;
-    color: rgba(234,227,211,0.85);
-    line-height: 2;
+    margin-top: 12px;
+    padding-top: 10px;
+    font-size: 12px;
+    color: rgba(234,227,211,0.8);
+    line-height: 1.8;
     text-align: left;
   }
-
   .breakdown .row { display: flex; justify-content: space-between; }
   .breakdown .row .k { color: rgba(234,227,211,0.55); }
-  .breakdown .row.total {
-    border-top: 1px dashed rgba(234,227,211,0.3);
-    margin-top: 8px;
-    padding-top: 8px;
-    font-weight: 700;
-    color: var(--paper);
-  }
-
-  .checklist {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.9;
-  }
-  .checklist ol { margin: 0; padding-left: 20px; }
-  .checklist li { margin-bottom: 4px; }
-
-  footer {
-    text-align: center;
-    font-size: 12px;
-    color: var(--ink-soft);
-    opacity: 0.6;
-    margin-top: 8px;
-  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header>
-    <h1>탕전 물양 계산기</h1>
-    <span class="stamp">해나무한의원</span>
-  </header>
-
-  <div class="formula">
-    <span class="main">투입할 물의 양</span> =<br>
-    &nbsp;&nbsp;포장 필요량 (1포당 용량 × 총 갯수)<br>
-    &nbsp;&nbsp;+ 약재흡수량 (약재 무게 × 배수)<br>
-    &nbsp;&nbsp;+ 증발량
-  </div>
+  <h1>탕전 물양 계산기</h1>
 
   <section>
-    <p class="section-title">1. 약재 정보</p>
-
     <div class="field">
-      <label>약재 종류</label>
       <div class="toggle-group" id="herbType">
         <button class="toggle-btn active" data-value="일반">일반약</button>
         <button class="toggle-btn" data-value="녹용">녹용약</button>
       </div>
     </div>
 
-    <div class="row-2">
-      <div class="field">
-        <label>총 약재무게 (g)</label>
-        <input type="number" id="totalWeight" placeholder="예: 800" min="0">
+    <div class="row-2 field">
+      <div>
+        <label>약재무게(g)</label>
+        <input type="number" id="totalWeight" placeholder="800" min="0">
       </div>
-      <div class="field">
-        <label>제외 약재무게 (g)</label>
+      <div>
+        <label>제외무게(g)</label>
         <input type="number" id="excludeWeight" placeholder="0" min="0" value="0">
       </div>
     </div>
-    <p class="hint">제외 대상: 석고, 분말류(모려·용골·사인 등)</p>
-  </section>
+    <p class="hint">제외: 석고·분말류(모려·용골·사인 등)</p>
 
-  <section>
-    <p class="section-title">2. 계절</p>
     <div class="field season-field" id="seasonField">
+      <label>계절</label>
       <div class="toggle-group" id="season">
         <button class="toggle-btn active" data-value="여름">여름</button>
         <button class="toggle-btn" data-value="겨울">겨울</button>
       </div>
-      <p class="hint">계산 무게가 500g 이하이면 계절 배수 대신 500g 이하 기준(× 0.5 / × 0.8)이 자동 적용됩니다.</p>
-      <p class="season-note" id="seasonNote">↳ 계산 무게 500g 이하 — 계절 배수 대신 소량 약재 기준이 적용됩니다.</p>
     </div>
-  </section>
 
-  <section>
-    <p class="section-title">3. 포장 정보</p>
-    <div class="row-2">
-      <div class="field">
-        <label>1포당 용량 (cc)</label>
-        <input type="number" id="perPacket" placeholder="예: 120" min="0">
+    <div class="row-2 field">
+      <div>
+        <label>1포당 용량(cc)</label>
+        <input type="number" id="perPacket" placeholder="120" min="0">
       </div>
-      <div class="field">
-        <label>총 갯수 (포)</label>
-        <input type="number" id="packetCount" placeholder="예: 30" min="0">
+      <div>
+        <label>총 갯수(포)</label>
+        <input type="number" id="packetCount" placeholder="30" min="0">
       </div>
     </div>
   </section>
@@ -295,21 +179,6 @@
     <div class="value"><span id="resultValue">0</span><span class="unit">cc</span></div>
     <div class="breakdown" id="breakdown"></div>
   </div>
-
-  <section>
-    <p class="section-title">계산 전 확인</p>
-    <div class="checklist">
-      <ol>
-        <li>일반약인지 녹용약인지 확인한다.</li>
-        <li>제외 품목을 뺀 실제 계산 무게가 500g 이하인지, 1kg 이하인지 확인한다.</li>
-        <li>계절 조정 배수와 소량 약재 기준이 겹치면 소량 약재 기준을 우선한다.</li>
-        <li>최종 물양이 포장에 필요한 약액보다 충분한지 확인한다.</li>
-        <li>애매하거나 평소 계산량과 차이가 크면 물을 넣기 전에 선임자에게 확인한다.</li>
-      </ol>
-    </div>
-  </section>
-
-  <footer>정리된 계산 규칙 기반 · 판단이 애매한 경우 선임자에게 확인해 주세요</footer>
 
 </div>
 
@@ -327,7 +196,6 @@
       });
     });
   }
-
   setupToggle('herbType', 'herbType');
   setupToggle('season', 'season');
 
@@ -346,30 +214,20 @@
     const isSmall = effWeight > 0 && effWeight <= 500;
 
     document.getElementById('seasonField').classList.toggle('disabled', isSmall);
-    document.getElementById('seasonNote').classList.toggle('show', isSmall);
 
-    // 약재흡수량 배수
     let mult, multLabel;
     if (isSmall) {
       mult = isNok ? 0.8 : 0.5;
-      multLabel = '500g 이하 기준';
+      multLabel = '500g 이하';
     } else {
-      mult = state.season === '여름'
-        ? (isNok ? 1.1 : 0.8)
-        : (isNok ? 1.3 : 1.0);
-      multLabel = `${state.season} 배수`;
+      mult = state.season === '여름' ? (isNok ? 1.1 : 0.8) : (isNok ? 1.3 : 1.0);
+      multLabel = state.season;
     }
     const absorption = effWeight * mult;
 
-    // 증발량
-    let evap, evapLabel;
-    if (effWeight > 1000) {
-      evap = isNok ? 3000 : 2500;
-      evapLabel = '기본 (1kg 초과)';
-    } else {
-      evap = isNok ? 2500 : 2000;
-      evapLabel = '1kg 이하';
-    }
+    let evap;
+    if (effWeight > 1000) evap = isNok ? 3000 : 2500;
+    else evap = isNok ? 2500 : 2000;
 
     const packaging = perPacket * packetCount;
     const total = packaging + absorption + evap;
@@ -377,15 +235,13 @@
     document.getElementById('resultValue').textContent = Math.round(total).toLocaleString();
 
     const lines = [
-      ['유효 약재무게', `${effWeight}g${excludeWeight > 0 ? ` (${totalWeight}g − ${excludeWeight}g)` : ''}`],
-      ['포장 필요량', `${perPacket || 0} × ${packetCount || 0} = ${Math.round(packaging).toLocaleString()}cc`],
-      ['약재흡수량', `${effWeight} × ${mult} (${multLabel}) = ${Math.round(absorption).toLocaleString()}cc`],
-      ['증발량', `${Math.round(evap).toLocaleString()}cc (${evapLabel})`],
+      ['유효무게', `${effWeight}g`],
+      ['포장필요량', `${Math.round(packaging).toLocaleString()}cc`],
+      ['약재흡수량', `${Math.round(absorption).toLocaleString()}cc (${multLabel})`],
+      ['증발량', `${Math.round(evap).toLocaleString()}cc`],
     ];
-
     document.getElementById('breakdown').innerHTML =
-      lines.map(([k, v]) => `<div class="row"><span class="k">${k}</span><span>${v}</span></div>`).join('') +
-      `<div class="row total"><span>합계</span><span>${Math.round(total).toLocaleString()}cc</span></div>`;
+      lines.map(([k, v]) => `<div class="row"><span class="k">${k}</span><span>${v}</span></div>`).join('');
   }
 
   calculate();
