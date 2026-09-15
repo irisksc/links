@@ -127,6 +127,21 @@
   }
   .breakdown .row { display: flex; justify-content: space-between; }
   .breakdown .row .k { color: rgba(234,227,211,0.55); }
+
+  .calc-btn {
+    width: 100%;
+    margin-top: 4px;
+    padding: 11px;
+    border: none;
+    border-radius: 3px;
+    background: var(--stamp);
+    color: var(--paper);
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .calc-btn:active { opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -172,11 +187,13 @@
         <input type="number" id="packetCount" placeholder="30" min="0">
       </div>
     </div>
+
+    <button class="calc-btn" id="calcBtn">계산 시작</button>
   </section>
 
   <div class="result">
     <div class="label">최종 투입 물양</div>
-    <div class="value"><span id="resultValue">0</span><span class="unit">cc</span></div>
+    <div class="value"><span id="resultValue">-</span><span class="unit" id="resultUnit"></span></div>
     <div class="breakdown" id="breakdown"></div>
   </div>
 
@@ -192,16 +209,13 @@
         group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state[stateKey] = btn.dataset.value;
-        calculate();
       });
     });
   }
   setupToggle('herbType', 'herbType');
   setupToggle('season', 'season');
 
-  ['totalWeight', 'excludeWeight', 'perPacket', 'packetCount'].forEach(id => {
-    document.getElementById(id).addEventListener('input', calculate);
-  });
+  document.getElementById('calcBtn').addEventListener('click', calculate);
 
   function calculate() {
     const totalWeight = parseFloat(document.getElementById('totalWeight').value) || 0;
@@ -233,6 +247,7 @@
     const total = packaging + absorption + evap;
 
     document.getElementById('resultValue').textContent = Math.round(total).toLocaleString();
+    document.getElementById('resultUnit').textContent = 'cc';
 
     const lines = [
       ['유효무게', `${effWeight}g`],
@@ -243,8 +258,6 @@
     document.getElementById('breakdown').innerHTML =
       lines.map(([k, v]) => `<div class="row"><span class="k">${k}</span><span>${v}</span></div>`).join('');
   }
-
-  calculate();
 </script>
 
 </body>
